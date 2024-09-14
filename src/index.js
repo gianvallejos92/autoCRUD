@@ -3,7 +3,9 @@ import morgan from 'morgan';
 import { engine } from 'express-handlebars';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+
 import ObjectsRoutes from './routes/objects.routes.js';
+import FieldsRoutes from './routes/fields.routes.js';
 
 //Init
 const app = express();
@@ -31,6 +33,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(ObjectsRoutes);
+app.use(FieldsRoutes);
 
 //Public Files
 app.use(express.static(join(__dirname, 'public')));
