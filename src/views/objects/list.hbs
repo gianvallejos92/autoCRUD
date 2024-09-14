@@ -1,0 +1,40 @@
+<div class="">
+  <h1>Objects</h1>
+  {{#if objects}}
+    <div>
+       <table class="table text-center">
+          <thead>
+              <tr class="table-dark">
+                  <th scope="col" class="col-4">Name</th>
+                  <th scope="col">API_Name</th>
+                  <th scope="col">Acciones</th>
+              </tr>
+          </thead>
+          <tbody>
+              {{#each objects}}
+                  <tr>
+                      <td>{{Name}}</td>
+                      <td>{{API_Name}}</td>
+                      <td>
+                          <div class="btn-group">
+                              <a href="#" class="btn btn-warning p-2">
+                              <i class="fa-solid fa-pencil"></i></a>
+                              <a href="#" class="btn btn-danger p-2">
+                              <i class="fa-solid fa-trash"></i></a>
+                          </div>
+                      </td>
+                  </tr>
+              {{/each}}
+          </tbody>
+          <tfoot>
+              <tr class="table-dark">
+                  <td colspan="4">REGISTRO DE PERSONAS</td>
+              </tr>
+          </tfoot>
+      </table>
+    </div>
+  {{else}}
+    <h2>No objects in the data base</h2>
+    <a href="#">Create new Object</a>
+  {{/if}}
+</div>
