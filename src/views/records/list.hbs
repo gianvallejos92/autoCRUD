@@ -1,0 +1,23 @@
+<h1>Records for: {{ object.name }}</h1>
+{{#if fields}}
+  <table>
+    <thead>
+      <tr>
+        {{#each fields}}
+          <th>{{name}}</th>
+        {{/each}}
+      </tr>
+    </thead>
+    <tbody>
+      {{#each records}}      
+        <tr>        
+          <td>{{0}}</td>      
+          <td>{{1}}</td>
+          <td>{{2}}</td>
+        </tr>        
+      {{/each}}
+    </tbody>
+  </table>  
+{{else}}
+  <h2>No Fields</h2>
+{{/if}}
