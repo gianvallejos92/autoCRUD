@@ -13,7 +13,7 @@ const app = express();
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 //Settings
-app.set('port', process.env.PORT || 3000);
+app.set('port', 5000);
 app.set('views', join(__dirname, 'views'));
 app.engine('.hbs', engine({
   defaultLayout: 'main',
