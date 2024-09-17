@@ -1,17 +1,17 @@
 <div></div>
-  <h2>Nuevo Field:</h2>
-  <form action="/field/add/{{objectId}}" method="post">
+  <h2>Edit Field:</h2>
+  <form action="/field/edit/{{objectId}}/{{fieldId}}" method="post">
     <div>
       <label for="Name">Nombre</label>
-      <input type="text" name="Name" id="Name" required>
+      <input type="text" name="Name" id="Name" value={{field.Name}} required>
     </div>
     <div>
       <label for="API_Name">Nombre API</label>
-      <input type="text" name="API_Name" id="API_Name">
+      <input type="text" name="API_Name" id="API_Name" value={{field.API_Name}}>
     </div>
     <div>
       <label for="type">Type</label>
-      <select name="type" id="type">
+      <select name="type" id="type" value={{field.type}}>
         <option value="text">text</option>
         <option value="int">int</option>
         <option value="decimal">decimal</option>
@@ -21,10 +21,14 @@
     </div>
     <div>
       <label for="isRequired">¿Requerido?</label>
-      <input type="checkbox" name="required" id="required" required>
+      {{#if field.isRequired}}
+        <input type="checkbox" name="required" id="required" checked>
+      {{else}}
+        <input type="checkbox" name="required" id="required" >
+      {{/if}}
     </div>
     <div class="mt-3 mb-3">
-      <button class="btn btn-secondary">Crear Objeto</button>
+      <button class="btn btn-secondary">Actualizar Objeto</button>
     </div>
   </form>
   <div class="mt-3">
