@@ -1,6 +1,9 @@
 <div class="">
-  <h1>Fields of Object</h1>
+  <h1>Fields of Object {{objectName}}</h1>
   {{#if fields}}
+    <div class="mb-3 mt-3">
+        <a href="/field/add/{{objectId}}" class="btn btn-info">Create new Field</a>
+    </div>
     <div>
        <table class="table text-center">
           <thead>
@@ -34,6 +37,6 @@
     </div>
   {{else}}
     <h2>No fields in the data base</h2>
-    <a href="#">Create new Field</a>
+    <a href="/field/add/{{objectId}}" class="btn btn-info">Create new Field</a>
   {{/if}}
 </div>
