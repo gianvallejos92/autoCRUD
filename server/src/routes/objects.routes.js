@@ -19,4 +19,33 @@ router.get('/object/list', async(req, res) => {
   }
 });
 
+router.get('/object/add', async(req, res) => {
+  try {
+    res.render('objects/add');
+  } catch (err) {
+    res.status(500).json({
+      message: err.message
+    });
+  }
+});
+
+router.post('/object/add', async(req, res) => {
+  try {
+    const {Name, API_Name} = req.body;
+    const newObject = {
+      Name, API_Name
+    }
+    
+    //Validate unique API_name in all databases 
+    
+    await pool.query('INSERT INTO Object SET ?', [newObject]); //call insertObject Procedure
+    res.redirect('/object/list');
+
+  } catch (err) {
+    res.status(500).json({
+      message: err.message
+    });
+  }
+});
+
 export default router;

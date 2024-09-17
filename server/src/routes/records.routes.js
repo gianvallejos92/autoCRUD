@@ -3,75 +3,6 @@ import pool from '../database.js';
 
 const router = Router();
 
-router.get('/api', async(req, res) => {
-  try {
-    res.json({
-      "records": [
-      {
-        "line": 0,
-        "values": [
-          {
-            "value": "Gian"
-          },
-          {
-            "value": "Vallejos"
-          },
-          {
-            "value": "31"
-          }
-        ]
-      },
-      {
-        "line": 1,
-        "values": [
-          {
-            "value": "Piere"
-          },
-          {
-            "value": "Bardales"
-          },
-          {
-            "value": "28"
-          }
-        ]
-      },
-      {
-        "line": 2,
-        "values": [
-          {
-            "value": "Joaquin"
-          },
-          {
-            "value": "Valdivia"
-          },
-          {
-            "value": "21"
-          }
-        ]
-      }
-      ],
-      "fields": [
-        {
-          "id": 1,
-          "name": "Name"
-        },
-        {
-          "id": 2,
-          "name": "LastName"
-        },
-        {
-          "id": 3,
-          "name": "Edad"
-        }
-      ]
-    });
-  } catch (err) {
-    res.status(500).json({
-      message: err.message
-    });
-  }
-})
-
 router.get('/record/list/:id', async(req, res) => {
   try {    
 
@@ -91,7 +22,7 @@ router.get('/record/list/:id', async(req, res) => {
 
     const [recordResult] = await pool.query(recordQuery, [id]);
     
-    const recordsSplitted = generateRecordsPerLine(recordResult, fieldResult.length);
+    const recordsSplitted = generateRecordsPerLine(recordResult, fieldResult.length); //Set in External Module
 /*
     res.status(200).json({
       object: objectResult[0],
