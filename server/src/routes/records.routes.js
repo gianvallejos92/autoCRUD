@@ -92,15 +92,14 @@ router.get('/record/list/:id', async(req, res) => {
     const [recordResult] = await pool.query(recordQuery, [id]);
     
     const recordsSplitted = generateRecordsPerLine(recordResult, fieldResult.length);
-    //generateHTML(fieldResult, recordsSplitted);
-
+/*
     res.status(200).json({
       object: objectResult[0],
       records: recordsSplitted,
       fields: fieldResult
     })
-
-    //res.render('records/list', {object: objectResult[0], records: recordsSplitted, fields: fieldResult});
+*/
+    res.render('records/list', {object: objectResult[0], records: recordsSplitted, fields: fieldResult});
   } catch (err) {
     res.status(500).json({
       message: err.message
