@@ -1,0 +1,16 @@
+<div>
+  <h2>Nuevo Objeto:</h2>
+  <form action="/object/edit/{{object.id}}" method="post">
+    <div>
+      <label for="Name">Nombre</label>
+      <input type="text" name="Name" id="Name" value="{{object.Name}}" required>
+    </div>
+    <div>
+      <label for="API_Name">Nombre API</label>
+      <input type="text" name="API_Name" id="API_Name" value="{{object.API_Name}}" required>
+    </div>
+    <div>
+      <button>Editar Objeto</button>
+    </div>
+  </form>
+</div>
