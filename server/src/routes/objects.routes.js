@@ -5,7 +5,7 @@ const router = Router();
 
 router.get('/object/list', async(req, res) => {
   try {
-    const [result] = await pool.query('SELECT * FROM object LIMIT 1000');
+    const [result] = await pool.query('SELECT id, Name, API_Name, Plural_Name FROM object LIMIT 1000');
     /*
     res.status(200).json({
       objects: result
@@ -31,21 +31,32 @@ router.get('/object/add', async(req, res) => {
 });
 
 router.post('/object/add', async(req, res) => {
+  
+  await pool.query('START TRANSACTION;');
+
   try {
-    const {Name, API_Name} = req.body;
-    const newObject = {
-      Name, API_Name
-    }
+    const {Name, API_Name, Plural_Name} = req.body;
     
-    //Validate unique API_name in all databases 
+    let queryInsert = 'call insert_object (\'' +  Name +'\', \'' + API_Name +'\', \'' + Plural_Name +'\')';
+    await pool.query(queryInsert);
+
+    await pool.query('COMMIT;');
+
+    let queryNewTable = 'CREATE TABLE ' + API_Name + '(';
+    queryNewTable +=    ' `id` INT NOT NULL AUTO_INCREMENT, ';
+    queryNewTable +=    ' `CreatedDate` DATETIME NULL, ';
+    queryNewTable +=    ' `LastModifiedDate` DATETIME NULL,';
+    queryNewTable +=    'PRIMARY KEY(`id`));'
+
+    await pool.query(queryNewTable);
     
-    await pool.query('INSERT INTO Object SET ?', [newObject]); //call insertObject Procedure
     res.redirect('/object/list');
 
-  } catch (err) {
+  } catch (err) {    
+    await pool.query('ROLLBACK;');
     res.status(500).json({
       message: err.message
-    });
+    });    
   }
 });
 

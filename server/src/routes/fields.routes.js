@@ -8,7 +8,8 @@ router.get('/field/list/:objectId', async(req, res) => {
     const {objectId} = req.params;
     const [result] = await pool.query('SELECT * FROM field WHERE objectId = ? LIMIT 1000', [objectId]);
     const [objectName] = await pool.query('SELECT Name as objectName FROM OBJECT WHERE Id = ? LIMIT 1', [objectId]);
-    
+    const [emptyTable] = await pool.query('SELECT * FROM new_table');
+    console.log(JSON.stringify(emptyTable));
     res.render('fields/list', {fields: result, objectName: objectName[0].objectName, objectId});
   } catch (err) {
     res.status(500).json({
@@ -38,7 +39,7 @@ router.post('/field/add/:objectId', async(req, res) => {
       Name, API_Name, type, isRequired, objectId
     }
     
-    await pool.query('INSERT INTO field SET ?', [newObject]); //call insertField Procedure
+    await pool.query('INSERT INTO field SET ?', [newObject]); //call insertField Procedure - FALTA CreatedDate / ModifiedDate
     res.redirect('/field/list/' + objectId);
 
   } catch (err) {
