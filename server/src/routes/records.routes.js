@@ -98,4 +98,46 @@ router.get('/record/add/:objectId', async(req, res) => {
   }
 });
 
+router.post('/record/add/:objectId', async(req, res) => {
+  try {
+    const {objectId} = req.params;
+
+    const valuesArr = Object.entries(req.body);
+    console.log(valuesArr);
+
+/* Move this to Utility Class */
+    //Get Object API_Name
+    const [object] = await pool.query('SELECT Name, API_Name FROM object WHERE id = ?', [objectId]);
+    const Object_API_Name = object[0].API_Name;
+/* End Move this to Utility Class */
+
+    let query = 'INSERT INTO \`' + Object_API_Name + '\` SET ';
+    const _size = valuesArr.length;
+    valuesArr.map((item, ind) => {
+      if (item[1]) {
+        query += item[0] + ' = \'' + item[1] + '\'';
+        if (ind + 1 !== _size) {
+          query += ', ';
+        }
+      }
+    });
+    query += ', CreatedDate = NOW(), LastModifiedDate = NOW()';
+    
+    console.log(query);    
+/*
+    res.status(200).json({
+      valuesArr,
+      query: query
+    })
+*/
+    await pool.query(query);
+    res.redirect('/record/list/' + objectId);
+
+  } catch (err) {
+    res.status(500).json({
+      message: err.message
+    });
+  }
+});
+
 export default router;

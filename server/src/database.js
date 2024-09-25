@@ -4,7 +4,7 @@ const pool = createPool({
   host: 'localhost',
   port: '3306',
   user: 'root',
-  password: 'cmea03123', //Set your password
+  password: '', //Set your password
   database: 'autocrud'
 });
 
