@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 import ObjectsRoutes from './routes/objects.routes.js';
 import FieldsRoutes from './routes/fields.routes.js';
 import RecordsRoutes from './routes/records.routes.js';
+import AppsRoutes from './routes/apps.routes.js';
 
 //Init
 const app = express();
@@ -41,6 +42,7 @@ app.get('/', (req, res) => {
 app.use(ObjectsRoutes);
 app.use(FieldsRoutes);
 app.use(RecordsRoutes);
+app.use(AppsRoutes);
 
 //Public Files
 app.use(express.static(join(__dirname, 'public')));

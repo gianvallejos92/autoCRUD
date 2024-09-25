@@ -1,6 +1,7 @@
 <h1>Records for: {{ object.API_Name }}</h1>
 <div class="mb-3 mt-3"></div>
     <a href="/record/add/{{objectId}}" class="btn btn-info">Create new record</a>
+    <a href="/app" class="btn btn-info">Back to App</a>
 </div>
 {{#if fields}}
   <table class="table text-center">
@@ -9,6 +10,7 @@
         {{#each fields}}
           <th>{{name}}</th>
         {{/each}}
+        <th scope="col">Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -17,6 +19,14 @@
           {{#each values}}
             <td>{{value}}</td>
           {{/each}}
+          <td>
+              <div class="btn-group">
+                  <a href="/object/edit/{{id}}" class="btn btn-warning p-2">
+                  <i class="fa-solid fa-pencil"></i></a>
+                  <a href="/object/delete/{{id}}" class="btn btn-danger p-2">
+                  <i class="fa-solid fa-trash"></i></a>
+              </div>
+          </td>
         </tr>        
       {{/each}}
     </tbody>

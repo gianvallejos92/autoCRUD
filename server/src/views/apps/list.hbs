@@ -1,0 +1,23 @@
+<div class="container">
+  <div class ="row">
+    <div class="col-sm">
+      <h1>Hello World! </h1>
+      <h2>Welcome to the app</h2>
+    </div>
+    <div class="col-sm">
+      <a href="/object/list"  type="button" class="btn btn-info">Object Manager</a>
+    </div>
+  </div>
+  <div class="row">
+  {{#if objects}}
+    <h3>This are the tabs of your App, click on it to show it's Records </h3>
+    <div>
+      {{#each objects}}
+        <a href="/record/list/{{id}}"  type="button" class="btn btn-info">{{Name}}</a>
+      {{/each}}
+    </div>
+  {{else}}
+  <h3>No objects in your app, go to Object Manager</h3>
+  {{/if}}
+  </div>
+</div>
