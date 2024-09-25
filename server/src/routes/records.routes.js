@@ -7,7 +7,7 @@ const database_Name = 'autocrud'; //Add constant to Utility Class
 router.get('/record/list/:objectId', async(req, res) => {
   try {   
     const {objectId} = req.params;
-
+/* Move this to Utility Class */
     //Get Object API_Name
     const [object] = await pool.query('SELECT Name, API_Name FROM object WHERE id = ?', [objectId]);
     const Object_API_Name = object[0].API_Name;
@@ -15,6 +15,7 @@ router.get('/record/list/:objectId', async(req, res) => {
     //Get Columns with it's type from the table by Object_API_Name
     const [fieldNames] = await pool.query('SHOW Columns FROM ' + Object_API_Name + ' FROM ' + database_Name);
     const fields = generateFieldForAPI(fieldNames);
+/* End Move this to Utility Class */
 
     //Get Records from the table by Object_API_Name
     const [recordResult] = await pool.query('SELECT * FROM `' + Object_API_Name + '`');
@@ -28,7 +29,7 @@ router.get('/record/list/:objectId', async(req, res) => {
     })
 */
 
-    res.render('records/list', {object: object[0].Name, records: records, fields: fields});
+    res.render('records/list', {object: object[0].Name, records: records, fields: fields, objectId});
 
   } catch (err) {
     res.status(500).json({
@@ -62,5 +63,39 @@ const generateRecordsForAPI = (recordResult, fields) => {
   return arrs;
 }
 
+//Add Records
+router.get('/record/add/:objectId', async(req, res) => {
+  try {
+    const {objectId} = req.params;    
+/* Move this to Utility Class */
+    //Get Object API_Name
+    const [object] = await pool.query('SELECT Name, API_Name FROM object WHERE id = ?', [objectId]);
+    const Object_API_Name = object[0].API_Name;
+    const Object_Name = object[0].Name;
+
+    //Get Columns with it's type from the table by Object_API_Name
+    const [fieldNames] = await pool.query('SHOW Columns FROM ' + Object_API_Name + ' FROM ' + database_Name);
+    const fields = generateFieldForAPI(fieldNames);
+/* End Move this to Utility Class */
+    const fieldsForInput = fields.splice(1, fieldNames.length-3);
+/*
+    res.status(200).json({
+      object: Object_Name,
+      fields: fieldsForInput
+    })
+*/
+
+    res.render('records/add', {
+      objectId, 
+      Object_Name, 
+      fields: fieldsForInput
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      message: err.message
+    });
+  }
+});
 
 export default router;

@@ -1,0 +1,29 @@
+<div>
+  <h2>Nuevo registro de {{Object_Name}}:</h2>
+  {{#if fields}}
+  <form action="/record/add/{{objectId}}" method="post">
+    {{#each fields}}
+    <div>
+      <label for={{name}}>{{name}}</label>
+      {{#if (eq type 'int') }}
+        <input type="number" name={{name}} id={{name}}>
+      {{else if (eq type 'decimal') }}
+          <input type="date" name="{{name}}" id="{{name}}">
+      {{else if (eq type 'date') }}
+          <input type="date" name="{{name}}" id="{{name}}">
+      {{else if (eq type 'datetime') }}
+          <input type="datetime-local" name="{{name}}" id="{{name}}">
+      {{else}}
+          <input type="text" name="{{name}}" id="{{name}}">      
+      {{/if}}
+    </div>
+    {{/each}}
+    <div class="mt-3 mb-3">
+      <button class="btn btn-secondary">Crear Record</button>
+    </div>    
+  </form>
+  {{/if}}
+  <div class="mt-3">
+    <a href="/record/list/{{objectId}}" class="btn btn-info">Back to {{Object_Name}}</a>
+  </div>
+</div>

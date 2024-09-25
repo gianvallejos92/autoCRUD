@@ -19,7 +19,12 @@ app.engine('.hbs', engine({
   defaultLayout: 'main',
   layoutsDir: join(app.get('views'), 'layouts'),
   partialsDir: join(app.get('views'), 'partials'),
-  extname: '.hbs'
+  extname: '.hbs',
+  helpers: {
+    eq: (arg1, arg2) => {
+      return (arg1 === arg2)
+    }    
+  }
 }));
 app.set('view engine', '.hbs');
 
