@@ -5,12 +5,18 @@ const router = Router();
 
 router.get('/field/list/:objectId', async(req, res) => {
   try {
+    const database_Name = 'autocrud';  //Add constant to Utility Class
     const {objectId} = req.params;
-    const [result] = await pool.query('SELECT * FROM field WHERE objectId = ? LIMIT 1000', [objectId]);
-    const [objectName] = await pool.query('SELECT Name as objectName FROM OBJECT WHERE Id = ? LIMIT 1', [objectId]);
-    const [emptyTable] = await pool.query('SELECT * FROM new_table');
-    console.log(JSON.stringify(emptyTable));
-    res.render('fields/list', {fields: result, objectName: objectName[0].objectName, objectId});
+
+    //Get API Name from Object table By Id
+    const [objectQuery] = await pool.query('SELECT API_Name, Name FROM autocrud.object WHERE id = ?', objectId);
+    const API_Name_val = objectQuery[0].API_Name;
+
+    //Get Columns with it's type from the table API_Name
+    const [result] = await pool.query('SHOW Columns FROM ' + API_Name_val + ' FROM ' + database_Name);
+
+    res.render('fields/list', {fields: result, objectName: objectQuery[0].Name, objectId});
+
   } catch (err) {
     res.status(500).json({
       message: err.message
@@ -34,12 +40,37 @@ router.post('/field/add/:objectId', async(req, res) => {
   try {
     const {objectId} = req.params;
     const {Name, API_Name, type, required} = req.body;
-    let isRequired = (required === 'on') ? true : false;
-    const newObject = {
-      Name, API_Name, type, isRequired, objectId
+
+    //Get Object API_Name
+    const [object] = await pool.query('SELECT API_Name FROM object WHERE id = ?', [objectId]);
+    const Object_API_Name = object[0].API_Name;
+
+    //Prepare Field Query
+    let query = 'ALTER TABLE `' + Object_API_Name + '` ';
+    query += ' ADD COLUMN `' + API_Name + '` ';
+      
+    if ( type === 'int') {
+      query += ' INT ';
+    } else if ( type === 'decimal') {
+      query += ' DECIMAL(10,2) ';
+    } else if ( type === 'date') {
+      query += ' DATE ';
+    }  else if ( type === 'datetime') {
+      query += ' DATETIME ';
+    } else {
+      query += ' VARCHAR(255) ';
     }
+
+    if (required === 'on') {
+      query += ' NOT ';
+    }
+    query += ' NULL ';
     
-    await pool.query('INSERT INTO field SET ?', [newObject]); //call insertField Procedure - FALTA CreatedDate / ModifiedDate
+    
+    query += ' AFTER `id`';    
+
+    console.log('Query: ' + query);
+    await pool.query(query);
     res.redirect('/field/list/' + objectId);
 
   } catch (err) {

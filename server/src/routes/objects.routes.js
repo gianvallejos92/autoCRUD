@@ -32,7 +32,7 @@ router.get('/object/add', async(req, res) => {
 
 router.post('/object/add', async(req, res) => {
   
-  await pool.query('START TRANSACTION;');
+  await pool.query('START TRANSACTION;'); //CONCAT THE STRING QUERIES AND DO ONLY ONE POOL.QUERY
 
   try {
     const {Name, API_Name, Plural_Name} = req.body;
@@ -44,8 +44,8 @@ router.post('/object/add', async(req, res) => {
 
     let queryNewTable = 'CREATE TABLE ' + API_Name + '(';
     queryNewTable +=    ' `id` INT NOT NULL AUTO_INCREMENT, ';
-    queryNewTable +=    ' `CreatedDate` DATETIME NULL, ';
-    queryNewTable +=    ' `LastModifiedDate` DATETIME NULL,';
+    queryNewTable +=    ' `CreatedDate` DATETIME NOT NULL, ';
+    queryNewTable +=    ' `LastModifiedDate` DATETIME NOT NULL,';
     queryNewTable +=    'PRIMARY KEY(`id`));'
 
     await pool.query(queryNewTable);

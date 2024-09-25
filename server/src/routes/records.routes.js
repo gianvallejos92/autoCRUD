@@ -2,35 +2,34 @@ import {json, Router} from 'express';
 import pool from '../database.js';
 
 const router = Router();
+const database_Name = 'autocrud'; //Add constant to Utility Class
 
-router.get('/record/list/:id', async(req, res) => {
-  try {    
+router.get('/record/list/:objectId', async(req, res) => {
+  try {   
+    const {objectId} = req.params;
 
-    const {id} = req.params;
+    //Get Object API_Name
+    const [object] = await pool.query('SELECT Name, API_Name FROM object WHERE id = ?', [objectId]);
+    const Object_API_Name = object[0].API_Name;
 
-    let objectQuery = 'select name from object WHERE id = ?';
-    const [objectResult] = await pool.query(objectQuery, [id]);
+    //Get Columns with it's type from the table by Object_API_Name
+    const [fieldNames] = await pool.query('SHOW Columns FROM ' + Object_API_Name + ' FROM ' + database_Name);
+    const fields = generateFieldForAPI(fieldNames);
 
-    let fieldQuery = 'select id, name from field WHERE ObjectId = ?';
-    const [fieldResult] = await pool.query(fieldQuery, [id]);
-
-    let recordQuery =  'SELECT * FROM record WHERE fieldId IN (';
-        recordQuery +=   'SELECT * FROM (';
-        recordQuery +=     'SELECT Id FROM field WHERE ObjectId = ?';
-        recordQuery +=   ') AS subquery';
-        recordQuery += ') ORDER BY id';
-
-    const [recordResult] = await pool.query(recordQuery, [id]);
+    //Get Records from the table by Object_API_Name
+    const [recordResult] = await pool.query('SELECT * FROM `' + Object_API_Name + '`');
+    const records = generateRecordsForAPI(recordResult, fields);
     
-    const recordsSplitted = generateRecordsPerLine(recordResult, fieldResult.length); //Set in External Module
 /*
     res.status(200).json({
-      object: objectResult[0],
-      records: recordsSplitted,
-      fields: fieldResult
+      object: object[0].Name,
+      records: records,
+      fields: fields
     })
 */
-    res.render('records/list', {object: objectResult[0], records: recordsSplitted, fields: fieldResult});
+
+    res.render('records/list', {object: object[0].Name, records: records, fields: fields});
+
   } catch (err) {
     res.status(500).json({
       message: err.message
@@ -38,37 +37,30 @@ router.get('/record/list/:id', async(req, res) => {
   }
 });
 
-const generateRecordsPerLine = (recordResult, fieldsSize) => {
-  let recordValues = prepareRecordValues(recordResult, fieldsSize);
-  let recordsJson = generateRecordJSON(recordValues);
-  return recordsJson;
-}
-
-const prepareRecordValues = (recordResult, fieldsSize) => {
+//Move to Handler Class
+const generateFieldForAPI = (fieldNames) => {
   let arr = [];
-  let aux = [];
-  recordResult.map((record, ind) => {  
-    if (ind % fieldsSize === 0) {
-      if (aux.length !== 0) { arr.push(aux); }
-      aux = [];      
-    }
-    aux.push({"value": record.value});
-  });  
-
-  if (aux.length !== 0) { arr.push(aux); }
-  
+  fieldNames.map((field) => {
+    arr.push({
+      "name": field.Field, 
+      "type": field.Type,
+      "required": (field.Null === "NO") ? true : false
+    });
+  });
   return arr;
 }
 
-const generateRecordJSON = (recordValues) => {
-  let result = [];
-  recordValues.forEach((items, ind) => {
-    result.push({
-      "line": ind,
-      "values": items
+const generateRecordsForAPI = (recordResult, fields) => {
+  let arrs = [];
+  recordResult.map((record, ind) => {
+    let values = [];
+    fields.forEach(curField => {
+      values.push({ "value": record[curField.name] });
     });
+    arrs.push({ "line": ind, "values": values });
   });
-  return result;
+  return arrs;
 }
+
 
 export default router;

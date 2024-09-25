@@ -1,0 +1,76 @@
+{
+  "object": "Account",
+  "records": [
+    {
+      "line": 0,
+      "values": [
+        {
+          "value": "Gian"
+        },
+        {
+          "value": "Vallejos"
+        },
+        {
+          "value": "31"
+        }]
+    },
+    {
+      "line": 1,
+      "values": [
+        {
+          "value": "Piere"
+        },
+        {
+          "value": "Bardales"
+        },
+        {
+          "value": "28"
+        }]
+    },
+    {
+      "line": 2,
+      "values": [
+        {
+          "value": "Leo"
+        },
+        {
+          "value": "Martell"
+        },
+        {
+          "value": "null"
+        }
+      ]
+    },
+    {
+      "line": 3,
+      "values": [
+        {
+          "value": "Pedro"
+        },
+        {
+          "value": "Llanos"
+        },
+        {
+          "value": "49"
+        }
+      ]
+    }
+  ],
+  "fields": [
+    {
+      "name": "Name",
+      "type": "varchar(255)",
+      "required": true
+    },
+    {
+      "name": "LastName",
+      "type": "varchar(255)",
+      "required": true
+    },
+    {
+      "name": "Edad",
+      "type": "int",
+      "required": false
+    }
+  ]
+}
